@@ -3,20 +3,25 @@ import type { Comment } from '../types';
 
 const COMMENTS_STORAGE_KEY = 'de-todo-portalatin-comments';
 
+// Lista de comentarios base para simular un historial público
+const baseComments: Comment[] = [
+  { id: 1, name: 'Carlos R.', message: 'Excelente servicio de lavado de auto. ¡Muy recomendado!', timestamp: 'hace 2 días' },
+  { id: 2, name: 'Ana G.', message: 'Rápido y profesional. El mantenimiento de mi planta eléctrica quedó perfecto.', timestamp: 'hace 5 días' },
+  { id: 3, name: 'Luis Peña', message: '¡Mi aire acondicionado enfría como nuevo! Gracias por el excelente trabajo.', timestamp: 'la semana pasada' },
+  { id: 4, name: 'Maria F.', message: 'Muy responsable y atento a los detalles. Lo volveré a llamar sin duda.', timestamp: 'hace 2 semanas' },
+];
+
+
 const Comments: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>(() => {
     try {
       const savedComments = window.localStorage.getItem(COMMENTS_STORAGE_KEY);
-      if (savedComments) {
-        return JSON.parse(savedComments);
-      }
+      // Si hay comentarios guardados, los usa. Si no, usa la lista base.
+      return savedComments ? JSON.parse(savedComments) : baseComments;
     } catch (error) {
       console.error("Error reading comments from localStorage", error);
+      return baseComments;
     }
-    // Default comment if localStorage is empty or fails
-    return [
-      { id: 1, name: 'Carlos R.', message: 'Excelente servicio de lavado de auto. ¡Muy recomendado!', timestamp: 'hace 2 días' }
-    ];
   });
 
   useEffect(() => {
